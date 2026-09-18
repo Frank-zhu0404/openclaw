@@ -1,0 +1,38 @@
+{
+  "sessionId": "99b84e08-d379-44e7-bc6e-1472cc7fedb6",
+  "sessionKey": "agent:main:dashboard:1666c077-276c-46a7-bcca-2f0ca31c2cb8",
+  "source": "real Control UI session with gateway evidence-harness injection",
+  "providerKeyedProgress": [
+    {
+      "seq": 25,
+      "itemId": "msg_progress_live_151324",
+      "textSignature": {
+        "v": 1,
+        "id": "msg_progress_live_151324",
+        "phase": "progress"
+      },
+      "text": "[Injected provider stream (evidence harness)]\n\nProvider-keyed progress (live): MiniMax turn active; awaiting shell result.",
+      "visibleDuringStreaming": true,
+      "retainedThroughCompletionAndReload": false,
+      "injectionNote": "This live-only row proves provider-keyed text during streaming; separate durable msg_progress_151324 proves retention through completion and reload. Explicitly injected evidence, not MiniMax-authored text."
+    },
+    {
+      "seq": 21,
+      "itemId": "msg_progress_151324",
+      "textSignature": {
+        "v": 1,
+        "id": "msg_progress_151324",
+        "phase": "progress"
+      },
+      "text": "[Injected provider stream (evidence harness)]\n\nProvider-keyed progress (history): MiniMax turn completed; progress retained after completion.",
+      "visibleAfterCompletion": true,
+      "visibleAfterReload": true,
+      "injectionNote": "This durable history row is injected evidence and is labeled in the Control UI."
+    }
+  ],
+  "identityRule": "Both ids are non-generated provider-style msg_* ids, not commentary- or final-answer- ids.",
+  "uiTextCheckAfterReload": {
+    "commentaryPresent": false,
+    "providerProgressPresent": true
+  }
+}

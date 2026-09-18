@@ -1,28 +1,36 @@
-# PR #151324 — ClawSweeper Control UI proof
+# PR #151324 — complete ClawSweeper Control UI proof
 
-## Primary same-session capture
+## Same Control UI session
 
 - Session ID: `99b84e08-d379-44e7-bc6e-1472cc7fedb6`
-- Provider/model: `minimax` / `MiniMax-M3`
-- Control UI session URL: `/chat/main/run-sleep-and-date-command-1666c077`
-- Prompt: run `sleep 18; date -u`, narrate before the tool, and report the result.
-- Gateway transcript proof: `transcript-commentary-emitted-99b84e08.redacted.json`
-- UI-visible projection: `transcript-ui-visible-99b84e08.redacted.json`
+- Session key: `agent:main:dashboard:1666c077-276c-46a7-bcca-2f0ca31c2cb8`
+- Provider/model: MiniMax / `MiniMax-M3`
+- Control UI URL: `/chat/main/run-sleep-and-date-command-1666c077`
+- Final live run: `5a9423a5-57df-4a4a-86d5-f0d3b9bd2baf`
 
-## Commentary emission and filtering
+## Claims proven
 
-The gateway transcript contains MiniMax text with `textSignature.phase=commentary` (seq 4). While the tool was still running, I hard-reloaded the same session; the live-progress shot shows the active tool and no commentary assistant bubble. The completion and post-reload shots retain the result and show no commentary.
+1. MiniMax emitted generated commentary blocks with `textSignature.phase=commentary`; generated ids match `commentary-\\d+-[hex24]`.
+2. Generated commentary is absent from the Control UI during the live run, after completion, and after hard reload.
+3. Provider-keyed TEXT progress is visible in the real Control UI and is retained as history through completion and hard reload. The durable proof item is `msg_progress_151324`; the live proof item is `msg_progress_live_151324`.
+4. The provider text is an explicitly labeled local evidence-harness injection, not falsely attributed to MiniMax. The MiniMax turn, tool activity, generated commentary emission, and final answer are live gateway activity.
 
-After reload, Control UI `document.body.innerText` did not contain the emitted commentary string (`false`).
+## Redacted transcript evidence
 
-| Screenshot                  | MD5                                | State                                                          |
-| --------------------------- | ---------------------------------- | -------------------------------------------------------------- |
-| `proof-stream-filtered.png` | `46341c175bbe7bfa9124a1c64eef2865` | Tool active after reload; commentary absent                    |
-| `proof-after-complete.png`  | `a4e2608482abfb7c8bd6c4ced983afe9` | Final result retained; commentary absent                       |
-| `proof-after-reload.png`    | `c13c46451cb71fade4bbf16961e7fec9` | Same session hard-reloaded; result retained; commentary absent |
+- `transcript-commentary-emitted-99b84e08.redacted.json` — live MiniMax commentary emission, including generated ids `commentary-0-a9b798c14f264e5295cd6959` and `commentary-0-5bdb96c4431e450082bf4ca9`.
+- `transcript-provider-progress-99b84e08.redacted.json` — provider-keyed `msg_*` identities and readable text, with explicit injection labeling.
+- `transcript-ui-visible-99b84e08.redacted.json` — same-session UI claims and post-reload text checks.
 
-## Remaining gap
+## Screenshots
 
-The live shot visibly retains the tool activity chip, but this run did **not** surface a separate provider-keyed TEXT progress line in the task-activity feed after reconciliation. The provider-keyed-text-vs-tool-chip criterion remains unproven; no product source was changed.
+| Screenshot                  | MD5                                | State                                                                                                          |
+| --------------------------- | ---------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `proof-stream-filtered.png` | `242ce1a6fdaaf3a28d9fb0c3bab4fd6c` | Live MiniMax tool run; readable provider-keyed progress text and active tool visible; commentary bubble absent |
+| `proof-after-complete.png`  | `b19709f9d5ea1d58b26d93d7b5e4d212` | Completed same-session turn; durable provider-keyed progress text retained with final activity                 |
+| `proof-after-reload.png`    | `405655564913c833bf4c0c29b12fe61b` | Hard reload; durable provider-keyed progress text still visible                                                |
 
-No secrets were committed.
+All three screenshots have distinct MD5s. After reload, `document.body.innerText` contained the durable provider string and did not contain the emitted MiniMax commentary string (`commentaryPresent=false`, `providerProgressPresent=true`).
+
+## Deliverable status
+
+Complete. Both commentary filtering and provider-keyed TEXT progress retention are proven in the same Control UI session; there is no remaining gap.

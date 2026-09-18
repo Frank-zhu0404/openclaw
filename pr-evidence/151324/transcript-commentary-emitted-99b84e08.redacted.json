@@ -1,20 +1,32 @@
 {
   "sessionId": "99b84e08-d379-44e7-bc6e-1472cc7fedb6",
+  "sessionKey": "agent:main:dashboard:1666c077-276c-46a7-bcca-2f0ca31c2cb8",
   "provider": "minimax",
   "model": "MiniMax-M3",
+  "runId": "5a9423a5-57df-4a4a-86d5-f0d3b9bd2baf",
   "commentaryBlocks": [
     {
-      "seq": 4,
-      "messageId": "5713c2d4-5199-4bc8-a2d0-df840585a500",
-      "text": "I'll run `sleep 18; date -u` in the shell now \u2014 it'll pause for 18 seconds, then print the current UTC time. Starting it in the background and I'll check back when it finishes.",
+      "seq": 23,
+      "text": "Running `sleep 25; date -u` — 25-second pause, then UTC time. I'll keep the process active and poll for the result.",
       "textSignature": {
         "v": 1,
-        "id": "commentary-0-03be87f8e3fd4c649fb1817c",
+        "id": "commentary-0-a9b798c14f264e5295cd6959",
+        "phase": "commentary"
+      },
+      "provider": "minimax",
+      "model": "MiniMax-M3"
+    },
+    {
+      "seq": 26,
+      "text": "Internal context noted (no active exec sessions, subagents, or media tasks — the `lucky-otter` exec above finished). Polling now to retrieve the live result.",
+      "textSignature": {
+        "v": 1,
+        "id": "commentary-0-5bdb96c4431e450082bf4ca9",
         "phase": "commentary"
       },
       "provider": "minimax",
       "model": "MiniMax-M3"
     }
   ],
-  "claim": "Gateway transcript proves MiniMax emitted commentary text with textSignature.phase=commentary."
+  "claim": "Gateway transcript proves MiniMax emitted generated commentary text with phase=commentary; the Control UI filters these blocks."
 }

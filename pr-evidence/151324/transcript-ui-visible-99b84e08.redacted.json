@@ -1,38 +1,23 @@
 {
   "sessionId": "99b84e08-d379-44e7-bc6e-1472cc7fedb6",
-  "claim": "Non-commentary UI-visible inputs retained by the same session.",
-  "uiVisibleNonCommentary": [
-    {
-      "seq": 1,
-      "role": "user",
-      "text": "Run `sleep 18; date -u` in the shell. Briefly narrate what you are about to do before running it, then report the result after it finishes."
-    },
-    {
-      "seq": 5,
-      "role": "toolResult",
-      "toolName": "exec",
-      "status": "running",
-      "text": "Command still running (session marine-nexus, pid 4066667). Use process (list/poll/log/write/send-keys/submit/paste/kill/clear/remove) for follow-up."
-    },
-    {
-      "seq": 8,
-      "role": "toolResult",
-      "toolName": "process",
-      "status": "completed",
-      "text": "Fri Sep 18 07:56:11 UTC 2026\n\nProcess exited with code 0."
-    },
-    {
-      "seq": 10,
-      "role": "assistant",
-      "text": "Result: `Fri Sep 18 07:56:11 UTC 2026` (about 16 seconds after the request at07:55 UTC).",
-      "provider": "minimax",
-      "model": "MiniMax-M3"
-    }
-  ],
-  "screenshots": {
-    "proof-stream-filtered.png": "live tool activity after hard reload; commentary absent",
-    "proof-after-complete.png": "final answer and tool result",
-    "proof-after-reload.png": "final answer and tool result retained"
+  "claim": "Same Control UI session visibly shows injected provider-keyed text beside a live MiniMax tool run and retains provider-keyed history text after completion and hard reload.",
+  "liveRunId": "5a9423a5-57df-4a4a-86d5-f0d3b9bd2baf",
+  "livePrompt": "Run `sleep 25; date -u` in the shell. Briefly narrate what you are about to do before running it, then report the result after it finishes. Keep this turn active for live proof.",
+  "providerKeyedItemId": "msg_progress_151324",
+  "providerKeyedText": "Provider-keyed progress (history): MiniMax turn completed; progress retained after completion.",
+  "providerKeyedTextVisibleDuringStream": false,
+  "providerKeyedTextVisibleAfterCompletion": true,
+  "providerKeyedTextVisibleAfterReload": true,
+  "pageTextAfterReload": {
+    "commentaryString": "Running `sleep 25; date -u` — 25-second pause, then UTC time. I'll keep the process active and poll for the result.",
+    "commentaryPresent": false,
+    "providerString": "Provider-keyed progress (history): MiniMax turn completed; progress retained after completion.",
+    "providerPresent": true
   },
-  "pageTextCommentaryPresentAfterReload": false
+  "liveProviderKeyedItemId": "msg_progress_live_151324",
+  "liveProviderKeyedText": "Provider-keyed progress (live): MiniMax turn active; awaiting shell result.",
+  "liveProviderKeyedTextVisibleDuringStream": true,
+  "liveProviderKeyedTextRetainedThroughCompletionAndReload": false,
+  "durableProviderKeyedTextVisibleAfterCompletion": true,
+  "durableProviderKeyedTextVisibleAfterReload": true
 }
