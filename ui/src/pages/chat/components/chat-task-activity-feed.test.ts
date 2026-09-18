@@ -1,6 +1,5 @@
 import { render } from "lit";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { projectChatDisplayMessages } from "../../../../../src/gateway/chat-display-projection.js";
 import { createDeferred } from "../../../../../test/helpers/promise.js";
 import { extractText } from "../../../lib/chat/message-extract.ts";
 import { createGatewayBrowserClientFixture } from "../chat-pane.test-support.ts";
@@ -185,45 +184,48 @@ describe("task activity feed", () => {
   );
 
   it("keeps provider-keyed progress readable and hides generated commentary narration", () => {
+    // Use already-projected shapes (same contract as chat-display-projection.media.test.ts)
+    // so UI vitest does not need to resolve the full gateway/@openclaw/ai graph.
     const progressId = "msg_progress";
     const generatedId = "commentary-0-aaaaaaaaaaaaaaaaaaaaaaaa";
     const monologue = "Running through the relevant rules";
     const answer = "The lookup returned 42.";
-    const projected = projectChatDisplayMessages(
-      [
-        {
-          role: "assistant",
-          content: [
-            {
-              type: "text",
-              text: "Visible progress",
-              textSignature: JSON.stringify({ v: 1, id: progressId, phase: "commentary" }),
-            },
-          ],
-        },
-        {
-          role: "assistant",
-          content: [
-            {
-              type: "text",
-              text: monologue,
-              textSignature: JSON.stringify({ v: 1, id: generatedId, phase: "commentary" }),
-            },
-            toolCall("lookup", "lookup", { query: "value" }),
-            {
-              type: "text",
-              text: answer,
-              textSignature: JSON.stringify({
-                v: 1,
-                id: "final-answer-0-bbbbbbbbbbbbbbbbbbbbbbbb",
-                phase: "final_answer",
-              }),
-            },
-          ],
-        },
-      ],
-      { includeCommentaryFallbacks: true },
-    );
+    const projected = [
+      {
+        role: "assistant",
+        content: [{ type: "text", text: "Visible progress" }],
+        openclawStreamFallback: { source: "segment", itemId: progressId },
+      },
+      {
+        role: "assistant",
+        content: [
+          {
+            type: "text",
+            text: monologue,
+            textSignature: JSON.stringify({ v: 1, id: generatedId, phase: "commentary" }),
+          },
+        ],
+        openclawStreamFallback: { source: "segment", itemId: generatedId },
+      },
+      {
+        role: "assistant",
+        content: [toolCall("lookup", "lookup", { query: "value" })],
+      },
+      {
+        role: "assistant",
+        content: [
+          {
+            type: "text",
+            text: answer,
+            textSignature: JSON.stringify({
+              v: 1,
+              id: "final-answer-0-bbbbbbbbbbbbbbbbbbbbbbbb",
+              phase: "final_answer",
+            }),
+          },
+        ],
+      },
+    ];
     const fallbackItemId = (message: unknown) => {
       const fallback = (message as { openclawStreamFallback?: { itemId?: string } })
         .openclawStreamFallback;
