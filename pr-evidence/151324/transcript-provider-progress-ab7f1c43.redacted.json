@@ -1,0 +1,16 @@
+{
+  "sessionId": "ab7f1c43-4d6e-443b-abc8-78b99966d82e",
+  "injection": {
+    "id": "msg_progress_151324_reshoot_68d3b50_clean",
+    "phase": "commentary",
+    "provider": "openclaw",
+    "model": "gateway-injected",
+    "text": "[Evidence harness] Progress update: the 25-second UTC command completed; retaining the result in this session history.",
+    "durable": true
+  },
+  "uiVisibility": {
+    "afterComplete": false,
+    "afterReload": false,
+    "note": "Injected row is durable in SQLite but was not visible in Control UI projection."
+  }
+}
