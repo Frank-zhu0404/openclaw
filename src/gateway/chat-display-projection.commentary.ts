@@ -1,6 +1,6 @@
 import { asOptionalRecord as readRecord } from "@openclaw/normalization-core/record-coerce";
 import {
-  isGeneratedAssistantTextSignatureId,
+  isGeneratedMiniMaxAssistantCommentaryId,
   parseAssistantTextSignature,
   readAssistantTextBlocksForPhase,
 } from "../shared/chat-message-content.js";
@@ -83,13 +83,14 @@ export function projectAssistantCommentaryFallbacks(
       group.sourceBlocks.push(block);
     }
     if (text.trim()) {
-      // Generated OpenClaw ids keep phase so MiniMax/Anthropic pre-tool
-      // narration is not the reply. Provider item ids stay unphased so
-      // task-activity extractors still show keyed progress.
-      const generated =
-        typeof providerItemId === "string" && isGeneratedAssistantTextSignatureId(providerItemId);
+      // Only MiniMax-tagged narration keeps phase so extractText / task
+      // activity hide it. Ordinary generated commentary-* (#135081) and
+      // provider item ids stay unphased and remain readable after reload.
+      const hideAsCommentary =
+        typeof providerItemId === "string" &&
+        isGeneratedMiniMaxAssistantCommentaryId(providerItemId);
       group.content.push(
-        generated && typeof content.textSignature === "string"
+        hideAsCommentary && typeof content.textSignature === "string"
           ? { type: "text", text, textSignature: content.textSignature }
           : { type: "text", text },
       );

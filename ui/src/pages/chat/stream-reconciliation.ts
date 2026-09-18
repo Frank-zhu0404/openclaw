@@ -141,16 +141,19 @@ export function clearToolStreamSegments(state: StreamReconciliationState) {
 function liveAssistantTextSignature(itemId: string | undefined): string | undefined {
   if (!itemId || !isGeneratedAssistantTextSignatureId(itemId)) {
     // Provider item ids such as OpenAI Responses `msg_*` stay unphased so
-    // keyed progress remains visible final text. Generated commentary and
-    // final-answer ids reconstruct OpenClaw-owned phase so extractors do not
-    // treat MiniMax/Anthropic narration as the reply.
+    // keyed progress remains visible final text.
     return undefined;
   }
-  return JSON.stringify({
-    v: 1,
-    id: itemId,
-    phase: itemId.startsWith("final-answer-") ? "final_answer" : "commentary",
-  });
+  // Final-answer ids keep phase for extractors. MiniMax narration keeps
+  // commentary phase so it stays hidden after materialization. Ordinary
+  // generated commentary-* stays unphased per #135081 (readable on reload).
+  if (itemId.startsWith("final-answer-")) {
+    return JSON.stringify({ v: 1, id: itemId, phase: "final_answer" });
+  }
+  if (isGeneratedMiniMaxAssistantCommentaryId(itemId)) {
+    return JSON.stringify({ v: 1, id: itemId, phase: "commentary" });
+  }
+  return undefined;
 }
 
 function buildAssistantStreamMessage(

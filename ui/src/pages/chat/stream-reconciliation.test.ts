@@ -192,21 +192,47 @@ describe("stream reconciliation", () => {
     );
     expect(extractAssistantPhaseText(progress)).toBe("Checking access for this turn.");
     expect(extractAssistantTextForPhase(progress, { phase: "commentary" })).toBeUndefined();
+    const ordinary = next.find(
+      (message) =>
+        (message as { openclawStreamFallback?: { itemId?: string } }).openclawStreamFallback
+          ?.itemId === ordinaryId,
+    );
+    expect(extractAssistantPhaseText(ordinary)).toBe("Anthropic-style pre-tool progress text");
+    expect(extractAssistantTextForPhase(ordinary, { phase: "commentary" })).toBeUndefined();
+    expect(
+      next.some((message) => {
+        const id = (message as { openclawStreamFallback?: { itemId?: string } })
+          .openclawStreamFallback?.itemId;
+        return id === minimaxId;
+      }),
+    ).toBe(false);
   });
 
-  it("keeps ordinary generated commentary visible on the live stream path", () => {
+  it("keeps ordinary generated commentary visible and readable after materialization", () => {
     const ordinaryId = "commentary-0-dddddddddddddddddddddddd";
+    const text = "Checking the workspace before the tool runs.";
     const state = makeIdleStreamState({
-      chatStreamSegments: [
-        { text: "Checking the workspace before the tool runs.", ts: 2, itemId: ordinaryId },
-      ],
+      chatStreamSegments: [{ text, ts: 2, itemId: ordinaryId }],
     });
     expect(
       visibleAssistantStreamParts(state, visibleStreamOptions).map((part) => ({
         text: part.text,
         itemId: part.itemId,
       })),
-    ).toEqual([{ text: "Checking the workspace before the tool runs.", itemId: ordinaryId }]);
+    ).toEqual([{ text, itemId: ordinaryId }]);
+    const next = materializeVisibleStreamState(
+      [{ role: "user", content: "look this up", timestamp: 1 }],
+      state,
+      visibleStreamOptions,
+    );
+    const fallback = next.find(
+      (message) =>
+        (message as { openclawStreamFallback?: { itemId?: string } }).openclawStreamFallback
+          ?.itemId === ordinaryId,
+    );
+    expect((fallback as { content?: unknown }).content).toEqual([{ type: "text", text }]);
+    expect(extractAssistantPhaseText(fallback)).toBe(text);
+    expect(extractAssistantTextForPhase(fallback, { phase: "commentary" })).toBeUndefined();
   });
 
   it("keeps provider-keyed commentary-phase progress readable when materialized", () => {

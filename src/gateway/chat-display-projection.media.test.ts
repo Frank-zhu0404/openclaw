@@ -185,12 +185,12 @@ describe("commentary group visibility", () => {
     expect(extractAssistantPhaseText(projected[0])).toBe("Visible progress");
   });
 
-  it("keeps generated commentary fallbacks phase-tagged so they are not the final answer", () => {
+  it("keeps MiniMax narration fallbacks phase-tagged so they are not the final answer", () => {
     const monologue = "Running through the relevant rules and checking access for this turn.";
     const answer = "The lookup returned 42.";
     const commentarySignature = JSON.stringify({
       v: 1,
-      id: "commentary-0-aaaaaaaaaaaaaaaaaaaaaaaa",
+      id: "minimax-commentary-0-aaaaaaaaaaaaaaaaaaaaaaaa",
       phase: "commentary",
     });
     const source = {
@@ -221,7 +221,7 @@ describe("commentary group visibility", () => {
       content: [{ type: "text", text: monologue, textSignature: commentarySignature }],
       openclawStreamFallback: {
         source: "segment",
-        itemId: "commentary-0-aaaaaaaaaaaaaaaaaaaaaaaa",
+        itemId: "minimax-commentary-0-aaaaaaaaaaaaaaaaaaaaaaaa",
       },
     });
     expect(extractAssistantPhaseText(fallback)).toBeUndefined();
@@ -231,6 +231,50 @@ describe("commentary group visibility", () => {
         .filter((message) => message !== fallback)
         .map((message) => extractAssistantPhaseText(message)),
     ).toEqual([answer]);
+  });
+
+  it("keeps ordinary generated commentary-* readable as unphased progress after projection", () => {
+    const progress = "Checking the workspace before the tool runs.";
+    const answer = "Done.";
+    const ordinaryId = "commentary-0-aaaaaaaaaaaaaaaaaaaaaaaa";
+    const ordinarySignature = JSON.stringify({
+      v: 1,
+      id: ordinaryId,
+      phase: "commentary",
+    });
+    const source = {
+      role: "assistant",
+      content: [
+        {
+          type: "text",
+          text: progress,
+          textSignature: ordinarySignature,
+        },
+        { type: "toolCall", id: "lookup", name: "lookup", arguments: { query: "value" } },
+        {
+          type: "text",
+          text: answer,
+          textSignature: JSON.stringify({
+            v: 1,
+            id: "final-answer-0-bbbbbbbbbbbbbbbbbbbbbbbb",
+            phase: "final_answer",
+          }),
+        },
+      ],
+    };
+    const projected = projectChatDisplayMessages([source], { includeCommentaryFallbacks: true });
+    const fallback = projected.find(
+      (message) => asOptionalRecord(message.openclawStreamFallback)?.itemId === ordinaryId,
+    );
+    expect(fallback).toMatchObject({
+      content: [{ type: "text", text: progress }],
+      openclawStreamFallback: {
+        source: "segment",
+        itemId: ordinaryId,
+      },
+    });
+    expect(extractAssistantPhaseText(fallback)).toBe(progress);
+    expect(extractAssistantTextForPhase(fallback, { phase: "commentary" })).toBeUndefined();
   });
 });
 

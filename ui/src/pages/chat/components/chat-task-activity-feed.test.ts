@@ -183,11 +183,13 @@ describe("task activity feed", () => {
     },
   );
 
-  it("keeps provider-keyed progress readable and hides generated commentary narration", () => {
+  it("keeps provider-keyed and ordinary commentary progress readable while hiding MiniMax narration", () => {
     // Use already-projected shapes (same contract as chat-display-projection.media.test.ts)
     // so UI vitest does not need to resolve the full gateway/@openclaw/ai graph.
     const progressId = "msg_progress";
-    const generatedId = "commentary-0-aaaaaaaaaaaaaaaaaaaaaaaa";
+    const ordinaryId = "commentary-0-aaaaaaaaaaaaaaaaaaaaaaaa";
+    const minimaxId = "minimax-commentary-0-cccccccccccccccccccccccc";
+    const ordinaryProgress = "Checking the workspace before the tool runs.";
     const monologue = "Running through the relevant rules";
     const answer = "The lookup returned 42.";
     const projected = [
@@ -198,14 +200,19 @@ describe("task activity feed", () => {
       },
       {
         role: "assistant",
+        content: [{ type: "text", text: ordinaryProgress }],
+        openclawStreamFallback: { source: "segment", itemId: ordinaryId },
+      },
+      {
+        role: "assistant",
         content: [
           {
             type: "text",
             text: monologue,
-            textSignature: JSON.stringify({ v: 1, id: generatedId, phase: "commentary" }),
+            textSignature: JSON.stringify({ v: 1, id: minimaxId, phase: "commentary" }),
           },
         ],
-        openclawStreamFallback: { source: "segment", itemId: generatedId },
+        openclawStreamFallback: { source: "segment", itemId: minimaxId },
       },
       {
         role: "assistant",
@@ -234,11 +241,15 @@ describe("task activity feed", () => {
     expect(extractText(projected.find((message) => fallbackItemId(message) === progressId))).toBe(
       "Visible progress",
     );
+    expect(extractText(projected.find((message) => fallbackItemId(message) === ordinaryId))).toBe(
+      ordinaryProgress,
+    );
     expect(
-      extractText(projected.find((message) => fallbackItemId(message) === generatedId)),
+      extractText(projected.find((message) => fallbackItemId(message) === minimaxId)),
     ).toBeNull();
     const container = mount(projected);
     expect(container.textContent).toContain("Visible progress");
+    expect(container.textContent).toContain(ordinaryProgress);
     expect(container.textContent).not.toContain(monologue);
     expect(container.textContent).toContain(answer);
   });
