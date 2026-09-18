@@ -1,5 +1,6 @@
 import { asOptionalRecord as readRecord } from "@openclaw/normalization-core/record-coerce";
 import {
+  isGeneratedAssistantTextSignatureId,
   parseAssistantTextSignature,
   readAssistantTextBlocksForPhase,
 } from "../shared/chat-message-content.js";
@@ -67,22 +68,29 @@ export function projectAssistantCommentaryFallbacks(
       group = undefined;
       continue;
     }
+    const providerKeyed = Boolean(
+      providerItemId && !isGeneratedAssistantTextSignatureId(providerItemId),
+    );
     if (group?.itemId !== itemId) {
       group = {
         itemId,
-        providerKeyed: Boolean(providerItemId),
+        providerKeyed,
         content: [],
         text: [],
         sourceBlocks: [],
       };
       groups.push(group);
     }
-    group.providerKeyed ||= Boolean(providerItemId);
+    group.providerKeyed ||= providerKeyed;
     if (signature?.phase !== "commentary") {
       group.sourceBlocks.push(block);
     }
     if (text.trim()) {
-      group.content.push({ type: "text", text });
+      group.content.push(
+        typeof content.textSignature === "string"
+          ? { type: "text", text, textSignature: content.textSignature }
+          : { type: "text", text },
+      );
       group.text.push(text);
     }
   }

@@ -44,6 +44,11 @@ export function normalizeAssistantPhase(value: unknown): AssistantPhase | undefi
   return value === "commentary" || value === "final_answer" ? value : undefined;
 }
 
+/** OpenClaw-generated stream-reconciliation ids, not provider item identities. */
+export function isGeneratedAssistantTextSignatureId(id: string): boolean {
+  return /^(?:commentary|final-answer)-\d+-[0-9a-f]{24}$/u.test(id);
+}
+
 /** Parses assistant text block signatures, preserving legacy raw ids when not JSON encoded. */
 export function parseAssistantTextSignature(
   block: AssistantTextSignatureBlock,

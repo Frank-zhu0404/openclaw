@@ -37,7 +37,8 @@ function tagUnphasedText(
     // Responses carry no run-scoped identity, so a response-local index aliases
     // segments across responses (every response's first commentary becomes
     // `<prefix>-0`) and collapses distinct stream-reconciliation rows. Entropy
-    // keeps each generated identity unique per segment.
+    // keeps each generated identity unique per segment. Display projection must
+    // not treat these ids as provider-keyed visible commentary fallbacks.
     const signature = encodeAssistantTextSignatureV1(
       `${idPrefix}-${phaseIndex}-${randomUUID().replaceAll("-", "").slice(0, 24)}`,
       phase,

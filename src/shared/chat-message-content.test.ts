@@ -5,9 +5,22 @@ import {
   extractAssistantPhaseText,
   extractFirstTextBlock,
   readAssistantTextBlocksForPhase,
+  isGeneratedAssistantTextSignatureId,
   parseAssistantTextSignature,
   resolveAssistantMessagePhase,
 } from "./chat-message-content.js";
+
+describe("generated assistant text signature ids", () => {
+  it("recognizes OpenClaw stream-reconciliation identities and rejects provider ids", () => {
+    expect(isGeneratedAssistantTextSignatureId("commentary-0-aaaaaaaaaaaaaaaaaaaaaaaa")).toBe(true);
+    expect(isGeneratedAssistantTextSignatureId("final-answer-1-bbbbbbbbbbbbbbbbbbbbbbbb")).toBe(
+      true,
+    );
+    expect(isGeneratedAssistantTextSignatureId("commentary-0")).toBe(false);
+    expect(isGeneratedAssistantTextSignatureId("progress")).toBe(false);
+    expect(isGeneratedAssistantTextSignatureId("msg_123")).toBe(false);
+  });
+});
 
 describe("shared/chat-message-content", () => {
   it.each(["commentary", "final_answer"] as const)(

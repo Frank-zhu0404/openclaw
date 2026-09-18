@@ -42,9 +42,13 @@ it("caps commentary captions across an intervening image as one message", () => 
   expect(projected).toContainEqual(
     expect.objectContaining({
       content: [
-        { type: "text", text: "A".repeat(20) },
+        { type: "text", text: "A".repeat(20), textSignature: signature },
         image,
-        { type: "text", text: `${"B".repeat(9)}\n...(truncated)...` },
+        {
+          type: "text",
+          text: `${"B".repeat(9)}\n...(truncated)...`,
+          textSignature: signature,
+        },
       ],
       __openclaw: expect.objectContaining({ truncated: true }),
     }),
@@ -86,6 +90,26 @@ describe("commentary group visibility", () => {
       text: ["Visible progress"],
       images: 0,
       tools: 0,
+    },
+    {
+      name: "generated commentary identity",
+      phase: undefined,
+      content: [
+        {
+          type: "text",
+          text: "Running through the relevant rules and checking access.",
+          textSignature: JSON.stringify({
+            v: 1,
+            id: "commentary-0-aaaaaaaaaaaaaaaaaaaaaaaa",
+            phase: "commentary",
+          }),
+        },
+        tool,
+        final,
+      ],
+      text: ["Final reply"],
+      images: 0,
+      tools: 1,
     },
     {
       name: "control-only commentary with media and visible siblings",
@@ -163,6 +187,70 @@ describe("commentary group visibility", () => {
       expect(projected[0]).toMatchObject({ __openclaw: { media } });
     }
     expect(source).toEqual(before);
+  });
+
+  it("keeps provider-keyed commentary fallbacks phase-tagged", () => {
+    const projected = projectChatDisplayMessages([{ role: "assistant", content: [keyed] }], {
+      includeCommentaryFallbacks: true,
+    });
+    expect(projected).toEqual([
+      expect.objectContaining({
+        content: [
+          expect.objectContaining({
+            text: "Visible progress",
+            textSignature: keyed.textSignature,
+          }),
+        ],
+        openclawStreamFallback: expect.objectContaining({
+          source: "segment",
+          itemId: "progress",
+        }),
+      }),
+    ]);
+  });
+
+  it("does not project OpenClaw-generated commentary ids as unphased visible fallbacks", () => {
+    const monologue = "Running through the relevant rules and checking access for this turn.";
+    const source = {
+      role: "assistant",
+      content: [
+        {
+          type: "text",
+          text: monologue,
+          textSignature: JSON.stringify({
+            v: 1,
+            id: "commentary-0-aaaaaaaaaaaaaaaaaaaaaaaa",
+            phase: "commentary",
+          }),
+        },
+        { type: "toolCall", id: "lookup", name: "lookup", arguments: { query: "value" } },
+        {
+          type: "text",
+          text: "The lookup returned 42.",
+          textSignature: JSON.stringify({
+            v: 1,
+            id: "final-answer-0-bbbbbbbbbbbbbbbbbbbbbbbb",
+            phase: "final_answer",
+          }),
+        },
+      ],
+    };
+    const projected = projectChatDisplayMessages([source], { includeCommentaryFallbacks: true });
+    expect(
+      projected.some(
+        (message) => asOptionalRecord(message.openclawStreamFallback)?.source === "segment",
+      ),
+    ).toBe(false);
+    expect(
+      projected.flatMap((message) =>
+        Array.isArray(message.content)
+          ? message.content.flatMap((block) => {
+              const entry = asOptionalRecord(block);
+              return entry?.type === "text" && typeof entry.text === "string" ? [entry.text] : [];
+            })
+          : [],
+      ),
+    ).toEqual(["The lookup returned 42."]);
   });
 });
 
