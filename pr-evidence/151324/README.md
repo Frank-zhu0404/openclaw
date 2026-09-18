@@ -1,12 +1,17 @@
 # PR #151324 live Control UI evidence (MiniMax-M3)
 
-Captured from a real local Gateway Control UI session on this branch
-(`http://127.0.0.1:18789/`) using **MiniMax-M3** via the CN API. No secrets.
+Real local Gateway Control UI session on this branch. No secrets.
 
-| File                       | What it shows                                                                                               |
-| -------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| `live-stream-progress.png` | Mid-run: real tool progress (`sleep 12; date -u`) visible; pre-tool commentary not shown as assistant text  |
-| `live-after-complete.png`  | After completion: tool progress retained + final UTC answer; commentary still absent                        |
-| `live-after-reload.png`    | After hard browser reload of the same chat: progress + final still present (distinct capture from complete) |
+## Primary same-session proof (ClawSweeper)
 
-Redacted API JSON probes remain for provider shape. Demo HTML was removed earlier.
+See `PROOF.md`. Pair:
+
+- `transcript-commentary-emitted.redacted.json` — gateway stored `phase=commentary`
+- `proof-*.png` + `SAME-SESSION-SHOTS.md` — UI hides that commentary; keeps tool/final through reload
+- `transcript-ui-visible.redacted.json` / `session-fb8ca107-transcript.redacted.json` — redacted stream
+
+## Earlier captures
+
+`live-*.png` are older Control UI shots (weaker because prompts suppressed narration). Prefer `proof-*` + transcript pair above.
+
+Redacted API JSON probes remain for provider shape.

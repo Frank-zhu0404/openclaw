@@ -1,0 +1,35 @@
+{
+  "sessionId": "fb8ca107-de07-4d5b-a6a7-cd7800435fb3",
+  "claim": "Same session UI-facing projection inputs. FTS may index raw commentary; Control UI must not show it as a normal assistant bubble.",
+  "ftsMessages": [
+    {
+      "message_id": "913ae3c9-34b5-44b5-859e-8f6f2dbc1757",
+      "role": "user",
+      "text": "Please run the shell command `sleep 5; date -u +\"%Y-%m-%d %H:%M:%S UTC\"` to get a fresh UTC timestamp, then tell me the result and briefly summarize what you did.",
+      "timestamp": 1789709161486.0
+    },
+    {
+      "message_id": "bbfb7e62-880f-4d6f-8d2c-317dc4f1a109",
+      "role": "assistant",
+      "text": "I'll run that command to get a fresh UTC timestamp.",
+      "timestamp": 1789709165606.0
+    },
+    {
+      "message_id": "047ac0e9-85ac-491f-ba41-a479099654c7",
+      "role": "assistant",
+      "text": "**Fresh UTC timestamp:** `2026-09-18 05:26:10 UTC`\n\n**What I did:**\n1. Ran `sleep 5; date -u +\"%Y-%m-%d %H:%M:%S UTC\"` via the shell.\n2. The `sleep 5` paused for 5 seconds, then `date -u` output the current UTC time in the requested format.\n\nNotably, the captured timestamp (`05:26:10`) matches the conversation time (`05:26 UTC`) almost exactly — so the 5-second sleep barely shifted the clock between when we started and when the command printed.",
+      "timestamp": 1789709175628.0
+    }
+  ],
+  "nonCommentaryAssistantTexts": [
+    {
+      "seq": 7,
+      "messageId": "047ac0e9-85ac-491f-ba41-a479099654c7",
+      "text": "**Fresh UTC timestamp:** `2026-09-18 05:26:10 UTC`\n\n**What I did:**\n1. Ran `sleep 5; date -u +\"%Y-%m-%d %H:%M:%S UTC\"` via the shell.\n2. The `sleep 5` paused for 5 seconds, then `date -u` output the current UTC time in the requested format.\n\nNotably, the captured timestamp (`05:26:10`) matches the conversation time (`05:26 UTC`) almost exactly — so the 5-second sleep barely shifted the clock between when we started and when the command printed.",
+      "textSignature": "",
+      "provider": "minimax",
+      "model": "MiniMax-M3",
+      "phase": null
+    }
+  ]
+}

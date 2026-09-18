@@ -1,0 +1,254 @@
+{
+  "sessionId": "fb8ca107-de07-4d5b-a6a7-cd7800435fb3",
+  "events": [
+    {
+      "seq": 0,
+      "created_at": 1789709161449,
+      "event": {
+        "type": "session",
+        "version": 4,
+        "id": "fb8ca107-de07-4d5b-a6a7-cd7800435fb3",
+        "timestamp": "2026-09-18T05:26:01.449Z",
+        "cwd": "/home/box/.openclaw-pr151324/workspace"
+      }
+    },
+    {
+      "seq": 1,
+      "created_at": 1789709161486,
+      "event": {
+        "type": "message",
+        "id": "913ae3c9-34b5-44b5-859e-8f6f2dbc1757",
+        "parentId": null,
+        "timestamp": "2026-09-18T05:26:01.486Z",
+        "message": {
+          "role": "user",
+          "content": "Please run the shell command `sleep 5; date -u +\"%Y-%m-%d %H:%M:%S UTC\"` to get a fresh UTC timestamp, then tell me the result and briefly summarize what you did.",
+          "timestamp": 1789709161468,
+          "idempotencyKey": "bd821ab2-f0c3-4517-bdfa-01c40d0239c4:user",
+          "__openclaw": {
+            "senderIsOwner": true,
+            "senderId": "gateway-owner",
+            "senderIdentity": {
+              "type": "profile",
+              "id": "gateway-owner"
+            },
+            "transport": {
+              "clients": [
+                {
+                  "id": "openclaw-control-ui",
+                  "mode": "webchat"
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "seq": 2,
+      "created_at": 1789709162085,
+      "event": {
+        "type": "thinking_level_change",
+        "id": "5af6a558-ca58-4812-8b13-38ab43dd842c",
+        "parentId": "913ae3c9-34b5-44b5-859e-8f6f2dbc1757",
+        "timestamp": "2026-09-18T05:26:02.085Z",
+        "thinkingLevel": "off"
+      }
+    },
+    {
+      "seq": 3,
+      "created_at": 1789709162100,
+      "event": {
+        "type": "custom",
+        "customType": "model-snapshot",
+        "data": {
+          "timestamp": 1789709162099,
+          "provider": "minimax",
+          "modelApi": "anthropic-messages",
+          "modelId": "MiniMax-M3"
+        },
+        "id": "645c516a-2386-4568-9138-6cf04b19fbf8",
+        "parentId": "5af6a558-ca58-4812-8b13-38ab43dd842c",
+        "timestamp": "2026-09-18T05:26:02.100Z"
+      }
+    },
+    {
+      "seq": 4,
+      "created_at": 1789709165606,
+      "event": {
+        "type": "message",
+        "id": "bbfb7e62-880f-4d6f-8d2c-317dc4f1a109",
+        "parentId": "645c516a-2386-4568-9138-6cf04b19fbf8",
+        "timestamp": "2026-09-18T05:26:05.606Z",
+        "message": {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "text",
+              "text": "I'll run that command to get a fresh UTC timestamp.",
+              "textSignature": "{\"v\":1,\"id\":\"commentary-0-6e0a46eeb0c8491cacc19f3d\",\"phase\":\"commentary\"}"
+            },
+            {
+              "type": "toolCall",
+              "id": "call_01a0b2faa25077cab4f0a2d2",
+              "name": "exec",
+              "arguments": {
+                "command": "sleep 5; date -u +\"%Y-%m-%d %H:%M:%S UTC\""
+              }
+            }
+          ],
+          "api": "anthropic-messages",
+          "provider": "minimax",
+          "model": "MiniMax-M3",
+          "usage": {
+            "input": 43199,
+            "output": 58,
+            "cacheRead": 128,
+            "cacheWrite": 0,
+            "totalTokens": "[REDACTED]",
+            "cost": {
+              "input": 0.0259194,
+              "output": 0.0001392,
+              "cacheRead": 1.536e-05,
+              "cacheWrite": 0,
+              "total": 0.026073959999999997
+            },
+            "contextUsage": {
+              "state": "available",
+              "promptTokens": "[REDACTED]",
+              "totalTokens": "[REDACTED]"
+            }
+          },
+          "stopReason": "toolUse",
+          "timestamp": 1789709162144,
+          "responseId": "06fbfe6b550bf7abe7ea8804a72eae6a",
+          "responseModel": "MiniMax-M3",
+          "__openclaw": {
+            "runId": "bd821ab2-f0c3-4517-bdfa-01c40d0239c4"
+          }
+        }
+      }
+    },
+    {
+      "seq": 5,
+      "created_at": 1789709170643,
+      "event": {
+        "type": "message",
+        "id": "165035c1-ca0a-48c2-ab14-b8a625d7e111",
+        "parentId": "bbfb7e62-880f-4d6f-8d2c-317dc4f1a109",
+        "timestamp": "2026-09-18T05:26:10.643Z",
+        "message": {
+          "role": "toolResult",
+          "toolCallId": "call_01a0b2faa25077cab4f0a2d2",
+          "toolName": "exec",
+          "content": [
+            {
+              "type": "text",
+              "text": "2026-09-18 05:26:10 UTC"
+            }
+          ],
+          "details": {
+            "status": "completed",
+            "exitCode": 0,
+            "exitSignal": null,
+            "exitReason": "exit",
+            "durationMs": 5013,
+            "aggregated": "2026-09-18 05:26:10 UTC",
+            "noOutputTimedOut": false,
+            "cwd": "/home/box/.openclaw-pr151324/workspace"
+          },
+          "isError": false,
+          "timestamp": 1789709170642,
+          "__openclaw": {
+            "runId": "bd821ab2-f0c3-4517-bdfa-01c40d0239c4"
+          }
+        }
+      }
+    },
+    {
+      "seq": 6,
+      "created_at": 1789709170648,
+      "event": {
+        "type": "custom",
+        "customType": "openclaw.cache-ttl",
+        "data": {
+          "prunedToolResults": [],
+          "ambiguousToolResultBaseKeys": [],
+          "frozenToolResults": [
+            {
+              "key": "tool:call_01a0b2faa25077cab4f0a2d2:1789709170642",
+              "sourceHash": "AWK6IqFKVly4mhyfajrfVlfnDI6ravy-jSu5hCyAHOk"
+            }
+          ]
+        },
+        "id": "1515c170-99b9-4aaa-ad46-390b704abedc",
+        "parentId": "165035c1-ca0a-48c2-ab14-b8a625d7e111",
+        "timestamp": "2026-09-18T05:26:10.648Z"
+      }
+    },
+    {
+      "seq": 7,
+      "created_at": 1789709175628,
+      "event": {
+        "type": "message",
+        "id": "047ac0e9-85ac-491f-ba41-a479099654c7",
+        "parentId": "1515c170-99b9-4aaa-ad46-390b704abedc",
+        "timestamp": "2026-09-18T05:26:15.628Z",
+        "message": {
+          "role": "assistant",
+          "content": [
+            {
+              "type": "text",
+              "text": "**Fresh UTC timestamp:** `2026-09-18 05:26:10 UTC`\n\n**What I did:**\n1. Ran `sleep 5; date -u +\"%Y-%m-%d %H:%M:%S UTC\"` via the shell.\n2. The `sleep 5` paused for 5 seconds, then `date -u` output the current UTC time in the requested format.\n\nNotably, the captured timestamp (`05:26:10`) matches the conversation time (`05:26 UTC`) almost exactly — so the 5-second sleep barely shifted the clock between when we started and when the command printed."
+            }
+          ],
+          "api": "anthropic-messages",
+          "provider": "minimax",
+          "model": "MiniMax-M3",
+          "usage": {
+            "input": 43464,
+            "output": 132,
+            "cacheRead": 256,
+            "cacheWrite": 0,
+            "totalTokens": "[REDACTED]",
+            "cost": {
+              "input": 0.026078399999999998,
+              "output": 0.0003168,
+              "cacheRead": 3.072e-05,
+              "cacheWrite": 0,
+              "total": 0.02642592
+            },
+            "contextUsage": {
+              "state": "available",
+              "promptTokens": "[REDACTED]",
+              "totalTokens": "[REDACTED]"
+            }
+          },
+          "stopReason": "stop",
+          "timestamp": 1789709170652,
+          "responseId": "06fbfe744722a2ba978402b35d6d7a8c",
+          "responseModel": "MiniMax-M3",
+          "__openclaw": {
+            "runId": "bd821ab2-f0c3-4517-bdfa-01c40d0239c4"
+          }
+        }
+      }
+    },
+    {
+      "seq": 8,
+      "created_at": 1789709175635,
+      "event": {
+        "type": "custom",
+        "customType": "openclaw:bootstrap-context:full",
+        "data": {
+          "timestamp": 1789709175635,
+          "runId": "bd821ab2-f0c3-4517-bdfa-01c40d0239c4",
+          "sessionId": "fb8ca107-de07-4d5b-a6a7-cd7800435fb3"
+        },
+        "id": "376cefad-5606-4323-b742-e82f652f5ed6",
+        "parentId": "047ac0e9-85ac-491f-ba41-a479099654c7",
+        "timestamp": "2026-09-18T05:26:15.635Z"
+      }
+    }
+  ]
+}
