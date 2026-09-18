@@ -2,6 +2,10 @@
 // Control UI tests cover stream reconciliation behavior.
 import { describe, expect, it } from "vitest";
 import {
+  extractAssistantPhaseText,
+  extractAssistantTextForPhase,
+} from "../../../../src/shared/chat-message-content.js";
+import {
   reconcileTerminalStreamBoundary,
   resolveCumulativeAssistantTail,
   rolloverChatStream,
@@ -145,6 +149,54 @@ describe("stream reconciliation", () => {
       "tool output",
     ]);
   });
+
+  it.each([
+    {
+      name: "generated commentary identity",
+      itemId: "commentary-0-aaaaaaaaaaaaaaaaaaaaaaaa",
+      textSignature: JSON.stringify({
+        v: 1,
+        id: "commentary-0-aaaaaaaaaaaaaaaaaaaaaaaa",
+        phase: "commentary",
+      }),
+      visibleFinal: undefined,
+      commentary: "Checking access for this turn.",
+    },
+    {
+      name: "provider-keyed identity",
+      itemId: "msg_progress",
+      textSignature: undefined,
+      visibleFinal: "Checking access for this turn.",
+      commentary: undefined,
+    },
+  ])(
+    "keeps $name stream text out of the wrong visible phase",
+    ({ itemId, textSignature, visibleFinal, commentary }) => {
+      const state = makeIdleStreamState({
+        chatStreamSegments: [{ text: "Checking access for this turn.", ts: 2, itemId }],
+      });
+      const next = materializeVisibleStreamState(
+        [{ role: "user", content: "look this up", timestamp: 1 }],
+        state,
+        visibleStreamOptions,
+      );
+      const fallback = next.find(
+        (message) =>
+          (message as { openclawStreamFallback?: { itemId?: string } }).openclawStreamFallback
+            ?.itemId === itemId,
+      );
+      const content = (fallback as { content?: unknown }).content;
+      expect(content).toEqual([
+        {
+          type: "text",
+          text: "Checking access for this turn.",
+          ...(textSignature ? { textSignature } : {}),
+        },
+      ]);
+      expect(extractAssistantPhaseText(fallback)).toBe(visibleFinal);
+      expect(extractAssistantTextForPhase(fallback, { phase: "commentary" })).toBe(commentary);
+    },
+  );
 
   it("materializes keyed preambles before later assistant messages", () => {
     const state = makeIdleStreamState({

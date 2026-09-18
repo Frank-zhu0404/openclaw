@@ -13,6 +13,10 @@ import {
   appendSessionTranscriptMessageByIdentity,
 } from "../plugin-sdk/session-transcript-runtime.js";
 import {
+  extractAssistantPhaseText,
+  extractAssistantTextForPhase,
+} from "../shared/chat-message-content.js";
+import {
   closeOpenClawAgentDatabasesForTest,
   openOpenClawAgentDatabase,
 } from "../state/openclaw-agent-db.js";
@@ -90,26 +94,6 @@ describe("commentary group visibility", () => {
       text: ["Visible progress"],
       images: 0,
       tools: 0,
-    },
-    {
-      name: "generated commentary identity",
-      phase: undefined,
-      content: [
-        {
-          type: "text",
-          text: "Running through the relevant rules and checking access.",
-          textSignature: JSON.stringify({
-            v: 1,
-            id: "commentary-0-aaaaaaaaaaaaaaaaaaaaaaaa",
-            phase: "commentary",
-          }),
-        },
-        tool,
-        final,
-      ],
-      text: ["Final reply"],
-      images: 0,
-      tools: 1,
     },
     {
       name: "control-only commentary with media and visible siblings",
@@ -209,24 +193,26 @@ describe("commentary group visibility", () => {
     ]);
   });
 
-  it("does not project OpenClaw-generated commentary ids as unphased visible fallbacks", () => {
+  it("keeps generated commentary fallbacks phase-tagged so they are not the final answer", () => {
     const monologue = "Running through the relevant rules and checking access for this turn.";
+    const answer = "The lookup returned 42.";
+    const commentarySignature = JSON.stringify({
+      v: 1,
+      id: "commentary-0-aaaaaaaaaaaaaaaaaaaaaaaa",
+      phase: "commentary",
+    });
     const source = {
       role: "assistant",
       content: [
         {
           type: "text",
           text: monologue,
-          textSignature: JSON.stringify({
-            v: 1,
-            id: "commentary-0-aaaaaaaaaaaaaaaaaaaaaaaa",
-            phase: "commentary",
-          }),
+          textSignature: commentarySignature,
         },
         { type: "toolCall", id: "lookup", name: "lookup", arguments: { query: "value" } },
         {
           type: "text",
-          text: "The lookup returned 42.",
+          text: answer,
           textSignature: JSON.stringify({
             v: 1,
             id: "final-answer-0-bbbbbbbbbbbbbbbbbbbbbbbb",
@@ -236,21 +222,23 @@ describe("commentary group visibility", () => {
       ],
     };
     const projected = projectChatDisplayMessages([source], { includeCommentaryFallbacks: true });
+    const fallback = projected.find(
+      (message) => asOptionalRecord(message.openclawStreamFallback)?.source === "segment",
+    );
+    expect(fallback).toMatchObject({
+      content: [{ type: "text", text: monologue, textSignature: commentarySignature }],
+      openclawStreamFallback: {
+        source: "segment",
+        itemId: "commentary-0-aaaaaaaaaaaaaaaaaaaaaaaa",
+      },
+    });
+    expect(extractAssistantPhaseText(fallback)).toBeUndefined();
+    expect(extractAssistantTextForPhase(fallback, { phase: "commentary" })).toBe(monologue);
     expect(
-      projected.some(
-        (message) => asOptionalRecord(message.openclawStreamFallback)?.source === "segment",
-      ),
-    ).toBe(false);
-    expect(
-      projected.flatMap((message) =>
-        Array.isArray(message.content)
-          ? message.content.flatMap((block) => {
-              const entry = asOptionalRecord(block);
-              return entry?.type === "text" && typeof entry.text === "string" ? [entry.text] : [];
-            })
-          : [],
-      ),
-    ).toEqual(["The lookup returned 42."]);
+      projected
+        .filter((message) => message !== fallback)
+        .map((message) => extractAssistantPhaseText(message)),
+    ).toEqual([answer]);
   });
 });
 

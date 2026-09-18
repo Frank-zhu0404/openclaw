@@ -1,0 +1,24 @@
+{
+  "id": "[REDACTED]",
+  "type": "message",
+  "role": "assistant",
+  "model": "MiniMax-M3",
+  "content": [
+    {
+      "text": "The capital of France is **Paris**.",
+      "type": "text"
+    }
+  ],
+  "usage": {
+    "input_tokens": 278,
+    "output_tokens": 9,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 128,
+    "service_tier": "standard"
+  },
+  "stop_reason": "end_turn",
+  "base_resp": {
+    "status_code": 0,
+    "status_msg": ""
+  }
+}

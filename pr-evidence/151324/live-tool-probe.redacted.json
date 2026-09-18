@@ -1,0 +1,28 @@
+{
+  "id": "[REDACTED]",
+  "type": "message",
+  "role": "assistant",
+  "model": "MiniMax-M3",
+  "content": [
+    {
+      "type": "tool_use",
+      "id": "[REDACTED]",
+      "name": "lookup",
+      "input": {
+        "query": "capital of France"
+      }
+    }
+  ],
+  "usage": {
+    "input_tokens": 285,
+    "output_tokens": 28,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 128,
+    "service_tier": "standard"
+  },
+  "stop_reason": "tool_use",
+  "base_resp": {
+    "status_code": 0,
+    "status_msg": ""
+  }
+}

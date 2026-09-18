@@ -8,6 +8,7 @@ import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalString,
 } from "@openclaw/normalization-core/string-coerce";
+import { isGeneratedAssistantTextSignatureId } from "../../../../src/shared/chat-message-content.js";
 import {
   accumulatedStreamText,
   advanceAccumulatedStreamText,
@@ -134,6 +135,21 @@ export function clearToolStreamSegments(state: StreamReconciliationState) {
   }
 }
 
+function liveAssistantTextSignature(itemId: string | undefined): string | undefined {
+  if (!itemId || !isGeneratedAssistantTextSignatureId(itemId)) {
+    // Provider item ids such as OpenAI Responses `msg_*` stay unphased so
+    // keyed progress remains visible final text. Generated commentary and
+    // final-answer ids reconstruct OpenClaw-owned phase so extractors do not
+    // treat MiniMax/Anthropic narration as the reply.
+    return undefined;
+  }
+  return JSON.stringify({
+    v: 1,
+    id: itemId,
+    phase: itemId.startsWith("final-answer-") ? "final_answer" : "commentary",
+  });
+}
+
 function buildAssistantStreamMessage(
   stream: string,
   replacementText = stream,
@@ -144,9 +160,10 @@ function buildAssistantStreamMessage(
   afterBoundaryRunId?: string,
   afterSequence?: number,
 ): Record<string, unknown> {
+  const textSignature = liveAssistantTextSignature(itemId);
   return {
     role: "assistant",
-    content: [{ type: "text", text: stream }],
+    content: [{ type: "text", text: stream, ...(textSignature ? { textSignature } : {}) }],
     timestamp,
     openclawStreamFallback: {
       replacementText,

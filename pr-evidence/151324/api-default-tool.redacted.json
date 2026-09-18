@@ -1,0 +1,26 @@
+{
+  "id": "06fbdff38cc8c77d957d346a8e1c148e",
+  "model": "MiniMax-M3",
+  "content": [
+    {
+      "text": "I'll look up the weather for both cities.",
+      "type": "text"
+    },
+    {
+      "type": "tool_use",
+      "id": "call_01a0b283992876ffbc0ff1bb",
+      "name": "lookup",
+      "input": {
+        "query": "weather Beijing"
+      }
+    }
+  ],
+  "usage": {
+    "input_tokens": 277,
+    "output_tokens": 36,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 128,
+    "service_tier": "standard"
+  },
+  "stop_reason": "tool_use"
+}
