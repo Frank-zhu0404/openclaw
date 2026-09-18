@@ -6,6 +6,7 @@ import {
   extractFirstTextBlock,
   readAssistantTextBlocksForPhase,
   isGeneratedAssistantCommentaryId,
+  isGeneratedMiniMaxAssistantCommentaryId,
   isGeneratedAssistantTextSignatureId,
   parseAssistantTextSignature,
   resolveAssistantMessagePhase,
@@ -14,6 +15,9 @@ import {
 describe("generated assistant text signature ids", () => {
   it("recognizes OpenClaw stream-reconciliation identities and rejects provider ids", () => {
     expect(isGeneratedAssistantTextSignatureId("commentary-0-aaaaaaaaaaaaaaaaaaaaaaaa")).toBe(true);
+    expect(
+      isGeneratedAssistantTextSignatureId("minimax-commentary-0-aaaaaaaaaaaaaaaaaaaaaaaa"),
+    ).toBe(true);
     expect(isGeneratedAssistantTextSignatureId("final-answer-1-bbbbbbbbbbbbbbbbbbbbbbbb")).toBe(
       true,
     );
@@ -22,11 +26,21 @@ describe("generated assistant text signature ids", () => {
     expect(isGeneratedAssistantTextSignatureId("msg_123")).toBe(false);
   });
 
-  it("treats only generated commentary-* ids as hideable live commentary", () => {
+  it("classifies ordinary and MiniMax generated commentary ids without treating provider ids as generated", () => {
     expect(isGeneratedAssistantCommentaryId("commentary-0-aaaaaaaaaaaaaaaaaaaaaaaa")).toBe(true);
+    expect(isGeneratedAssistantCommentaryId("minimax-commentary-0-aaaaaaaaaaaaaaaaaaaaaaaa")).toBe(
+      true,
+    );
     expect(isGeneratedAssistantCommentaryId("final-answer-1-bbbbbbbbbbbbbbbbbbbbbbbb")).toBe(false);
     expect(isGeneratedAssistantCommentaryId("msg_progress")).toBe(false);
     expect(isGeneratedAssistantCommentaryId("commentary-0")).toBe(false);
+    expect(
+      isGeneratedMiniMaxAssistantCommentaryId("minimax-commentary-0-aaaaaaaaaaaaaaaaaaaaaaaa"),
+    ).toBe(true);
+    expect(isGeneratedMiniMaxAssistantCommentaryId("commentary-0-aaaaaaaaaaaaaaaaaaaaaaaa")).toBe(
+      false,
+    );
+    expect(isGeneratedMiniMaxAssistantCommentaryId("msg_progress")).toBe(false);
   });
 });
 

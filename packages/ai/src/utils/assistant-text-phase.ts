@@ -51,9 +51,33 @@ function tagUnphasedText(
   return tagged;
 }
 
+/** Prefix for MiniMax pre-tool narration that Control UI should keep off the live thread. */
+export const MINIMAX_COMMENTARY_ID_PREFIX = "minimax-commentary";
+
+/** Ordinary OpenClaw-generated commentary identities (visible per #135081). */
+export const COMMENTARY_ID_PREFIX = "commentary";
+
+export function resolveCommentaryIdPrefix(provider: string | undefined): string {
+  const normalized = typeof provider === "string" ? provider.trim().toLowerCase() : "";
+  return normalized === "minimax" ||
+    normalized === "minimax-portal" ||
+    normalized === "minimax-cn" ||
+    normalized === "minimax-portal-cn"
+    ? MINIMAX_COMMENTARY_ID_PREFIX
+    : COMMENTARY_ID_PREFIX;
+}
+
 /** Tags unphased narration before a tool-call event becomes consumer-visible. */
-export function tagPendingCommentaryText(content: ReadonlyArray<unknown>): PendingCommentaryTags {
-  return tagUnphasedText(content, "commentary", "commentary");
+export function tagPendingCommentaryText(
+  content: ReadonlyArray<unknown>,
+  options?: { idPrefix?: string; provider?: string },
+): PendingCommentaryTags {
+  const idPrefix =
+    options?.idPrefix ??
+    (options?.provider !== undefined
+      ? resolveCommentaryIdPrefix(options.provider)
+      : COMMENTARY_ID_PREFIX);
+  return tagUnphasedText(content, "commentary", idPrefix);
 }
 
 /** Records the confirmed final-answer boundary after reasoning resumes. */

@@ -106,7 +106,7 @@ describe("anthropic transport MiniMax-M3 commentary", () => {
     }
     expect(JSON.parse(String(textBlock.textSignature))).toMatchObject({
       v: 1,
-      id: expect.stringMatching(/^commentary-0-[0-9a-f]{24}$/),
+      id: expect.stringMatching(/^minimax-commentary-0-[0-9a-f]{24}$/),
       phase: "commentary",
     });
     expect(result.content.some((block) => block.type === "toolCall")).toBe(true);

@@ -150,12 +150,14 @@ describe("stream reconciliation", () => {
     ]);
   });
 
-  it("hides generated commentary from live visible stream parts and materialization", () => {
-    const generatedId = "commentary-0-aaaaaaaaaaaaaaaaaaaaaaaa";
+  it("hides MiniMax-tagged narration from live visible stream parts and materialization", () => {
+    const minimaxId = "minimax-commentary-0-aaaaaaaaaaaaaaaaaaaaaaaa";
+    const ordinaryId = "commentary-0-cccccccccccccccccccccccc";
     const state = makeIdleStreamState({
       chatStreamSegments: [
-        { text: "Internal context noted for this tool turn.", ts: 2, itemId: generatedId },
-        { text: "Checking access for this turn.", ts: 3, itemId: "msg_progress" },
+        { text: "MiniMax internal context noted for this tool turn.", ts: 2, itemId: minimaxId },
+        { text: "Anthropic-style pre-tool progress text", ts: 3, itemId: ordinaryId },
+        { text: "Checking access for this turn.", ts: 4, itemId: "msg_progress" },
       ],
     });
 
@@ -164,7 +166,10 @@ describe("stream reconciliation", () => {
         text: part.text,
         itemId: part.itemId,
       })),
-    ).toEqual([{ text: "Checking access for this turn.", itemId: "msg_progress" }]);
+    ).toEqual([
+      { text: "Anthropic-style pre-tool progress text", itemId: ordinaryId },
+      { text: "Checking access for this turn.", itemId: "msg_progress" },
+    ]);
 
     const next = materializeVisibleStreamState(
       [{ role: "user", content: "look this up", timestamp: 1 }],
@@ -179,7 +184,7 @@ describe("stream reconciliation", () => {
           return fallback;
         })
         .filter(Boolean),
-    ).toEqual(["msg_progress"]);
+    ).toEqual([ordinaryId, "msg_progress"]);
     const progress = next.find(
       (message) =>
         (message as { openclawStreamFallback?: { itemId?: string } }).openclawStreamFallback
@@ -187,6 +192,21 @@ describe("stream reconciliation", () => {
     );
     expect(extractAssistantPhaseText(progress)).toBe("Checking access for this turn.");
     expect(extractAssistantTextForPhase(progress, { phase: "commentary" })).toBeUndefined();
+  });
+
+  it("keeps ordinary generated commentary visible on the live stream path", () => {
+    const ordinaryId = "commentary-0-dddddddddddddddddddddddd";
+    const state = makeIdleStreamState({
+      chatStreamSegments: [
+        { text: "Checking the workspace before the tool runs.", ts: 2, itemId: ordinaryId },
+      ],
+    });
+    expect(
+      visibleAssistantStreamParts(state, visibleStreamOptions).map((part) => ({
+        text: part.text,
+        itemId: part.itemId,
+      })),
+    ).toEqual([{ text: "Checking the workspace before the tool runs.", itemId: ordinaryId }]);
   });
 
   it("keeps provider-keyed commentary-phase progress readable when materialized", () => {

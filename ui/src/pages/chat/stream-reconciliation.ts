@@ -9,7 +9,7 @@ import {
   normalizeOptionalString,
 } from "@openclaw/normalization-core/string-coerce";
 import {
-  isGeneratedAssistantCommentaryId,
+  isGeneratedMiniMaxAssistantCommentaryId,
   isGeneratedAssistantTextSignatureId,
 } from "../../../../src/shared/chat-message-content.js";
 import {
@@ -319,10 +319,10 @@ export function visibleAssistantStreamParts(
       toolIndexedSegmentIndex += 1;
     }
     const usesAccumulatedText = streamSegmentUsesAccumulatedText(segment);
-    // Live Control UI previously rendered generated commentary-* segments as
-    // stream items even though history projection hides them via phase. Skip
-    // those OpenClaw-owned ids here; provider-keyed ids stay visible.
-    if (itemId && isGeneratedAssistantCommentaryId(itemId)) {
+    // MiniMax producer tags hideable narration as minimax-commentary-*. Skip
+    // only those ids on the live path; ordinary commentary-* and provider
+    // item ids (msg_*) stay visible per #135081.
+    if (itemId && isGeneratedMiniMaxAssistantCommentaryId(itemId)) {
       if (usesAccumulatedText) {
         previousText = advanceAccumulatedStreamText(previousText, segment.text);
       }
