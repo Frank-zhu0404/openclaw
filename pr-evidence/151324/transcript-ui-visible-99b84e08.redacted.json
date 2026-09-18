@@ -1,0 +1,38 @@
+{
+  "sessionId": "99b84e08-d379-44e7-bc6e-1472cc7fedb6",
+  "claim": "Non-commentary UI-visible inputs retained by the same session.",
+  "uiVisibleNonCommentary": [
+    {
+      "seq": 1,
+      "role": "user",
+      "text": "Run `sleep 18; date -u` in the shell. Briefly narrate what you are about to do before running it, then report the result after it finishes."
+    },
+    {
+      "seq": 5,
+      "role": "toolResult",
+      "toolName": "exec",
+      "status": "running",
+      "text": "Command still running (session marine-nexus, pid 4066667). Use process (list/poll/log/write/send-keys/submit/paste/kill/clear/remove) for follow-up."
+    },
+    {
+      "seq": 8,
+      "role": "toolResult",
+      "toolName": "process",
+      "status": "completed",
+      "text": "Fri Sep 18 07:56:11 UTC 2026\n\nProcess exited with code 0."
+    },
+    {
+      "seq": 10,
+      "role": "assistant",
+      "text": "Result: `Fri Sep 18 07:56:11 UTC 2026` (about 16 seconds after the request at07:55 UTC).",
+      "provider": "minimax",
+      "model": "MiniMax-M3"
+    }
+  ],
+  "screenshots": {
+    "proof-stream-filtered.png": "live tool activity after hard reload; commentary absent",
+    "proof-after-complete.png": "final answer and tool result",
+    "proof-after-reload.png": "final answer and tool result retained"
+  },
+  "pageTextCommentaryPresentAfterReload": false
+}

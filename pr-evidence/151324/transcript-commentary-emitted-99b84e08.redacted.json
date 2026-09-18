@@ -1,0 +1,20 @@
+{
+  "sessionId": "99b84e08-d379-44e7-bc6e-1472cc7fedb6",
+  "provider": "minimax",
+  "model": "MiniMax-M3",
+  "commentaryBlocks": [
+    {
+      "seq": 4,
+      "messageId": "5713c2d4-5199-4bc8-a2d0-df840585a500",
+      "text": "I'll run `sleep 18; date -u` in the shell now \u2014 it'll pause for 18 seconds, then print the current UTC time. Starting it in the background and I'll check back when it finishes.",
+      "textSignature": {
+        "v": 1,
+        "id": "commentary-0-03be87f8e3fd4c649fb1817c",
+        "phase": "commentary"
+      },
+      "provider": "minimax",
+      "model": "MiniMax-M3"
+    }
+  ],
+  "claim": "Gateway transcript proves MiniMax emitted commentary text with textSignature.phase=commentary."
+}
