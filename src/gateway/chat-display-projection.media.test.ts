@@ -46,13 +46,9 @@ it("caps commentary captions across an intervening image as one message", () => 
   expect(projected).toContainEqual(
     expect.objectContaining({
       content: [
-        { type: "text", text: "A".repeat(20), textSignature: signature },
+        { type: "text", text: "A".repeat(20) },
         image,
-        {
-          type: "text",
-          text: `${"B".repeat(9)}\n...(truncated)...`,
-          textSignature: signature,
-        },
+        { type: "text", text: `${"B".repeat(9)}\n...(truncated)...` },
       ],
       __openclaw: expect.objectContaining({ truncated: true }),
     }),
@@ -173,24 +169,20 @@ describe("commentary group visibility", () => {
     expect(source).toEqual(before);
   });
 
-  it("keeps provider-keyed commentary fallbacks phase-tagged", () => {
+  it("keeps provider-keyed commentary fallbacks readable as unphased progress", () => {
     const projected = projectChatDisplayMessages([{ role: "assistant", content: [keyed] }], {
       includeCommentaryFallbacks: true,
     });
     expect(projected).toEqual([
       expect.objectContaining({
-        content: [
-          expect.objectContaining({
-            text: "Visible progress",
-            textSignature: keyed.textSignature,
-          }),
-        ],
+        content: [{ type: "text", text: "Visible progress" }],
         openclawStreamFallback: expect.objectContaining({
           source: "segment",
           itemId: "progress",
         }),
       }),
     ]);
+    expect(extractAssistantPhaseText(projected[0])).toBe("Visible progress");
   });
 
   it("keeps generated commentary fallbacks phase-tagged so they are not the final answer", () => {

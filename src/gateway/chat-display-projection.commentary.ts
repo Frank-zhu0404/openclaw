@@ -1,5 +1,6 @@
 import { asOptionalRecord as readRecord } from "@openclaw/normalization-core/record-coerce";
 import {
+  isGeneratedAssistantTextSignatureId,
   parseAssistantTextSignature,
   readAssistantTextBlocksForPhase,
 } from "../shared/chat-message-content.js";
@@ -82,8 +83,13 @@ export function projectAssistantCommentaryFallbacks(
       group.sourceBlocks.push(block);
     }
     if (text.trim()) {
+      // Generated OpenClaw ids keep phase so MiniMax/Anthropic pre-tool
+      // narration is not the reply. Provider item ids stay unphased so
+      // task-activity extractors still show keyed progress.
+      const generated =
+        typeof providerItemId === "string" && isGeneratedAssistantTextSignatureId(providerItemId);
       group.content.push(
-        typeof content.textSignature === "string"
+        generated && typeof content.textSignature === "string"
           ? { type: "text", text, textSignature: content.textSignature }
           : { type: "text", text },
       );
