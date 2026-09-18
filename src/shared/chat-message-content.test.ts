@@ -5,7 +5,6 @@ import {
   extractAssistantPhaseText,
   extractFirstTextBlock,
   readAssistantTextBlocksForPhase,
-  isGeneratedAssistantCommentaryId,
   isGeneratedMiniMaxAssistantCommentaryId,
   isGeneratedAssistantTextSignatureId,
   parseAssistantTextSignature,
@@ -27,20 +26,28 @@ describe("generated assistant text signature ids", () => {
   });
 
   it("classifies ordinary and MiniMax generated commentary ids without treating provider ids as generated", () => {
-    expect(isGeneratedAssistantCommentaryId("commentary-0-aaaaaaaaaaaaaaaaaaaaaaaa")).toBe(true);
-    expect(isGeneratedAssistantCommentaryId("minimax-commentary-0-aaaaaaaaaaaaaaaaaaaaaaaa")).toBe(
-      true,
-    );
-    expect(isGeneratedAssistantCommentaryId("final-answer-1-bbbbbbbbbbbbbbbbbbbbbbbb")).toBe(false);
-    expect(isGeneratedAssistantCommentaryId("msg_progress")).toBe(false);
-    expect(isGeneratedAssistantCommentaryId("commentary-0")).toBe(false);
-    expect(
-      isGeneratedMiniMaxAssistantCommentaryId("minimax-commentary-0-aaaaaaaaaaaaaaaaaaaaaaaa"),
-    ).toBe(true);
+    // Ordinary commentary stays a generated signature id but is not MiniMax-filtered (#135081).
+    expect(isGeneratedAssistantTextSignatureId("commentary-0-aaaaaaaaaaaaaaaaaaaaaaaa")).toBe(true);
     expect(isGeneratedMiniMaxAssistantCommentaryId("commentary-0-aaaaaaaaaaaaaaaaaaaaaaaa")).toBe(
       false,
     );
+    expect(
+      isGeneratedAssistantTextSignatureId("minimax-commentary-0-aaaaaaaaaaaaaaaaaaaaaaaa"),
+    ).toBe(true);
+    expect(
+      isGeneratedMiniMaxAssistantCommentaryId("minimax-commentary-0-aaaaaaaaaaaaaaaaaaaaaaaa"),
+    ).toBe(true);
+    // final-answer / provider ids are never MiniMax commentary hides.
+    expect(isGeneratedAssistantTextSignatureId("final-answer-1-bbbbbbbbbbbbbbbbbbbbbbbb")).toBe(
+      true,
+    );
+    expect(isGeneratedMiniMaxAssistantCommentaryId("final-answer-1-bbbbbbbbbbbbbbbbbbbbbbbb")).toBe(
+      false,
+    );
+    expect(isGeneratedAssistantTextSignatureId("msg_progress")).toBe(false);
     expect(isGeneratedMiniMaxAssistantCommentaryId("msg_progress")).toBe(false);
+    expect(isGeneratedAssistantTextSignatureId("commentary-0")).toBe(false);
+    expect(isGeneratedMiniMaxAssistantCommentaryId("commentary-0")).toBe(false);
   });
 });
 

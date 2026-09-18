@@ -52,12 +52,12 @@ function tagUnphasedText(
 }
 
 /** Prefix for MiniMax pre-tool narration that Control UI should keep off the live thread. */
-export const MINIMAX_COMMENTARY_ID_PREFIX = "minimax-commentary";
+const MINIMAX_COMMENTARY_ID_PREFIX = "minimax-commentary";
 
 /** Ordinary OpenClaw-generated commentary identities (visible per #135081). */
-export const COMMENTARY_ID_PREFIX = "commentary";
+const COMMENTARY_ID_PREFIX = "commentary";
 
-export function resolveCommentaryIdPrefix(provider: string | undefined): string {
+function resolveCommentaryIdPrefix(provider: string | undefined): string {
   const normalized = typeof provider === "string" ? provider.trim().toLowerCase() : "";
   return normalized === "minimax" ||
     normalized === "minimax-portal" ||

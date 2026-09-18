@@ -50,7 +50,7 @@ export function isGeneratedAssistantTextSignatureId(id: string): boolean {
 }
 
 /** Generated pre-tool commentary ids (ordinary or MiniMax; not final-answer / provider ids). */
-export function isGeneratedAssistantCommentaryId(id: string): boolean {
+function isGeneratedAssistantCommentaryId(id: string): boolean {
   return (
     isGeneratedAssistantTextSignatureId(id) &&
     (id.startsWith("commentary-") || id.startsWith("minimax-commentary-"))
@@ -59,7 +59,7 @@ export function isGeneratedAssistantCommentaryId(id: string): boolean {
 
 /** MiniMax-tagged narration that live Control UI should suppress (not ordinary #135081 progress). */
 export function isGeneratedMiniMaxAssistantCommentaryId(id: string): boolean {
-  return isGeneratedAssistantTextSignatureId(id) && id.startsWith("minimax-commentary-");
+  return isGeneratedAssistantCommentaryId(id) && id.startsWith("minimax-commentary-");
 }
 
 /** Parses assistant text block signatures, preserving legacy raw ids when not JSON encoded. */
