@@ -5,6 +5,7 @@ import {
   extractAssistantPhaseText,
   extractFirstTextBlock,
   readAssistantTextBlocksForPhase,
+  isGeneratedAssistantCommentaryId,
   isGeneratedAssistantTextSignatureId,
   parseAssistantTextSignature,
   resolveAssistantMessagePhase,
@@ -19,6 +20,13 @@ describe("generated assistant text signature ids", () => {
     expect(isGeneratedAssistantTextSignatureId("commentary-0")).toBe(false);
     expect(isGeneratedAssistantTextSignatureId("progress")).toBe(false);
     expect(isGeneratedAssistantTextSignatureId("msg_123")).toBe(false);
+  });
+
+  it("treats only generated commentary-* ids as hideable live commentary", () => {
+    expect(isGeneratedAssistantCommentaryId("commentary-0-aaaaaaaaaaaaaaaaaaaaaaaa")).toBe(true);
+    expect(isGeneratedAssistantCommentaryId("final-answer-1-bbbbbbbbbbbbbbbbbbbbbbbb")).toBe(false);
+    expect(isGeneratedAssistantCommentaryId("msg_progress")).toBe(false);
+    expect(isGeneratedAssistantCommentaryId("commentary-0")).toBe(false);
   });
 });
 

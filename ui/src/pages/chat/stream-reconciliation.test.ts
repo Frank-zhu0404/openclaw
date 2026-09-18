@@ -150,53 +150,89 @@ describe("stream reconciliation", () => {
     ]);
   });
 
-  it.each([
-    {
-      name: "generated commentary identity",
-      itemId: "commentary-0-aaaaaaaaaaaaaaaaaaaaaaaa",
-      textSignature: JSON.stringify({
-        v: 1,
-        id: "commentary-0-aaaaaaaaaaaaaaaaaaaaaaaa",
-        phase: "commentary",
-      }),
-      visibleFinal: undefined,
-      commentary: "Checking access for this turn.",
-    },
-    {
-      name: "provider-keyed identity",
-      itemId: "msg_progress",
-      textSignature: undefined,
-      visibleFinal: "Checking access for this turn.",
-      commentary: undefined,
-    },
-  ])(
-    "keeps $name stream text out of the wrong visible phase",
-    ({ itemId, textSignature, visibleFinal, commentary }) => {
-      const state = makeIdleStreamState({
-        chatStreamSegments: [{ text: "Checking access for this turn.", ts: 2, itemId }],
-      });
-      const next = materializeVisibleStreamState(
-        [{ role: "user", content: "look this up", timestamp: 1 }],
-        state,
-        visibleStreamOptions,
-      );
-      const fallback = next.find(
-        (message) =>
-          (message as { openclawStreamFallback?: { itemId?: string } }).openclawStreamFallback
-            ?.itemId === itemId,
-      );
-      const content = (fallback as { content?: unknown }).content;
-      expect(content).toEqual([
-        {
-          type: "text",
-          text: "Checking access for this turn.",
-          ...(textSignature ? { textSignature } : {}),
-        },
-      ]);
-      expect(extractAssistantPhaseText(fallback)).toBe(visibleFinal);
-      expect(extractAssistantTextForPhase(fallback, { phase: "commentary" })).toBe(commentary);
-    },
-  );
+  it("hides generated commentary from live visible stream parts and materialization", () => {
+    const generatedId = "commentary-0-aaaaaaaaaaaaaaaaaaaaaaaa";
+    const state = makeIdleStreamState({
+      chatStreamSegments: [
+        { text: "Internal context noted for this tool turn.", ts: 2, itemId: generatedId },
+        { text: "Checking access for this turn.", ts: 3, itemId: "msg_progress" },
+      ],
+    });
+
+    expect(
+      visibleAssistantStreamParts(state, visibleStreamOptions).map((part) => ({
+        text: part.text,
+        itemId: part.itemId,
+      })),
+    ).toEqual([{ text: "Checking access for this turn.", itemId: "msg_progress" }]);
+
+    const next = materializeVisibleStreamState(
+      [{ role: "user", content: "look this up", timestamp: 1 }],
+      state,
+      visibleStreamOptions,
+    );
+    expect(
+      next
+        .map((message) => {
+          const fallback = (message as { openclawStreamFallback?: { itemId?: string } })
+            .openclawStreamFallback?.itemId;
+          return fallback;
+        })
+        .filter(Boolean),
+    ).toEqual(["msg_progress"]);
+    const progress = next.find(
+      (message) =>
+        (message as { openclawStreamFallback?: { itemId?: string } }).openclawStreamFallback
+          ?.itemId === "msg_progress",
+    );
+    expect(extractAssistantPhaseText(progress)).toBe("Checking access for this turn.");
+    expect(extractAssistantTextForPhase(progress, { phase: "commentary" })).toBeUndefined();
+  });
+
+  it("keeps provider-keyed commentary-phase progress readable when materialized", () => {
+    const itemId = "msg_progress";
+    const state = makeIdleStreamState({
+      chatStreamSegments: [{ text: "Checking access for this turn.", ts: 2, itemId }],
+    });
+    const next = materializeVisibleStreamState(
+      [{ role: "user", content: "look this up", timestamp: 1 }],
+      state,
+      visibleStreamOptions,
+    );
+    const fallback = next.find(
+      (message) =>
+        (message as { openclawStreamFallback?: { itemId?: string } }).openclawStreamFallback
+          ?.itemId === itemId,
+    );
+    expect((fallback as { content?: unknown }).content).toEqual([
+      {
+        type: "text",
+        text: "Checking access for this turn.",
+      },
+    ]);
+    expect(extractAssistantPhaseText(fallback)).toBe("Checking access for this turn.");
+  });
+
+  it("still materializes generated final-answer ids as visible stream text", () => {
+    const itemId = "final-answer-1-bbbbbbbbbbbbbbbbbbbbbbbb";
+    const state = makeIdleStreamState({
+      chatStreamSegments: [{ text: "Here is the UTC time.", ts: 2, itemId }],
+    });
+    expect(
+      visibleAssistantStreamParts(state, visibleStreamOptions).map((part) => part.itemId),
+    ).toEqual([itemId]);
+    const next = materializeVisibleStreamState(
+      [{ role: "user", content: "time?", timestamp: 1 }],
+      state,
+      visibleStreamOptions,
+    );
+    const fallback = next.find(
+      (message) =>
+        (message as { openclawStreamFallback?: { itemId?: string } }).openclawStreamFallback
+          ?.itemId === itemId,
+    );
+    expect(extractAssistantPhaseText(fallback)).toBe("Here is the UTC time.");
+  });
 
   it("materializes keyed preambles before later assistant messages", () => {
     const state = makeIdleStreamState({

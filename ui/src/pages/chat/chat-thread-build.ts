@@ -3,6 +3,7 @@ import { asNullableRecord as asRecord } from "@openclaw/normalization-core/recor
 import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
 import type { ChatPendingInputsPage } from "../../../../packages/gateway-protocol/src/schema/logs-chat.js";
 import { composeTranscriptDisplay } from "../../../../src/chat/transcript-display-position.js";
+import { isGeneratedAssistantCommentaryId } from "../../../../src/shared/chat-message-content.js";
 import type { QuestionPrompt } from "../../app/question-prompt.ts";
 import { t } from "../../i18n/index.ts";
 import {
@@ -583,8 +584,14 @@ export function buildChatItems(props: BuildChatItemsProps): Array<ChatItem | Mes
     }
   }
   // Keyed commentary does not advance cumulative text and follows the indexed
-  // stream/tool pairs on timestamp ties.
+  // stream/tool pairs on timestamp ties. Generated OpenClaw commentary-* ids
+  // stay out of the live thread (history projection already phase-hides them);
+  // provider-keyed ids such as msg_* remain readable.
   for (const segment of keyedSegments) {
+    const itemId = normalizeOptionalString(segment.itemId);
+    if (itemId && isGeneratedAssistantCommentaryId(itemId)) {
+      continue;
+    }
     const text = sanitizeStreamText(segment.text);
     if (text.length > 0) {
       appendStreamSegment(segment, `stream-seg:${props.sessionKey}:${segment.itemId}`, text);

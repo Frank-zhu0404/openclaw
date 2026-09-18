@@ -49,6 +49,11 @@ export function isGeneratedAssistantTextSignatureId(id: string): boolean {
   return /^(?:commentary|final-answer)-\d+-[0-9a-f]{24}$/u.test(id);
 }
 
+/** Generated pre-tool commentary ids (not final-answer, not provider item ids). */
+export function isGeneratedAssistantCommentaryId(id: string): boolean {
+  return isGeneratedAssistantTextSignatureId(id) && id.startsWith("commentary-");
+}
+
 /** Parses assistant text block signatures, preserving legacy raw ids when not JSON encoded. */
 export function parseAssistantTextSignature(
   block: AssistantTextSignatureBlock,

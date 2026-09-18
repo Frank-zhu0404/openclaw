@@ -8,7 +8,10 @@ import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalString,
 } from "@openclaw/normalization-core/string-coerce";
-import { isGeneratedAssistantTextSignatureId } from "../../../../src/shared/chat-message-content.js";
+import {
+  isGeneratedAssistantCommentaryId,
+  isGeneratedAssistantTextSignatureId,
+} from "../../../../src/shared/chat-message-content.js";
 import {
   accumulatedStreamText,
   advanceAccumulatedStreamText,
@@ -316,6 +319,18 @@ export function visibleAssistantStreamParts(
       toolIndexedSegmentIndex += 1;
     }
     const usesAccumulatedText = streamSegmentUsesAccumulatedText(segment);
+    // Live Control UI previously rendered generated commentary-* segments as
+    // stream items even though history projection hides them via phase. Skip
+    // those OpenClaw-owned ids here; provider-keyed ids stay visible.
+    if (itemId && isGeneratedAssistantCommentaryId(itemId)) {
+      if (usesAccumulatedText) {
+        previousText = advanceAccumulatedStreamText(previousText, segment.text);
+      }
+      if (boundaryRunId) {
+        latestBoundaryRunId = boundaryRunId;
+      }
+      continue;
+    }
     const visible = visibleAssistantStreamText(
       usesAccumulatedText ? trimAccumulatedStreamPrefix(segment.text, previousText) : segment.text,
       opts.isHiddenStreamText,

@@ -3903,6 +3903,40 @@ describe("buildCachedChatItems", () => {
     ]);
   });
 
+  it("hides generated commentary live stream segments while keeping provider-keyed progress", () => {
+    const items = buildCachedChatItems(
+      createProps({
+        streamSegments: [
+          {
+            text: "Internal context noted for this tool turn.",
+            ts: 0,
+            itemId: "commentary-0-aaaaaaaaaaaaaaaaaaaaaaaa",
+          },
+          {
+            text: "Provider keyed progress text",
+            ts: 1,
+            itemId: "msg_progress",
+          },
+          {
+            text: "Here is the final answer.",
+            ts: 3,
+            itemId: "final-answer-1-bbbbbbbbbbbbbbbbbbbbbbbb",
+          },
+        ],
+        toolMessages: [chatMessage("toolResult", "Tool output", 2)],
+      }),
+    );
+
+    expect(items).toMatchObject([
+      { kind: "stream", text: "Provider keyed progress text", startedAt: 1 },
+      { kind: "group", role: "tool" },
+      { kind: "stream", text: "Here is the final answer.", startedAt: 3 },
+    ]);
+    expect(
+      items.some((item) => "text" in item && String(item.text).includes("Internal context")),
+    ).toBe(false);
+  });
+
   it("keeps already-visible tool cards before matching-timestamp keyed preambles", () => {
     const items = buildCachedChatItems(
       createProps({
