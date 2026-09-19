@@ -1,0 +1,25 @@
+{
+  "sessionId": "1b4c5530-dd00-4d83-bbb1-d2006637157f",
+  "sessionKey": "agent:main:dashboard:c7b483e6-0d48-4ebc-9f38-3849f9f24248",
+  "note": "Ordinary commentary-* and provider msg_* entered WITH phase=commentary; after Gateway projection they are unphased readable progress with the same itemId.",
+  "ordinary": {
+    "itemId": "commentary-0-a5b7154a17b606281c6c533d",
+    "enteredTextSignature": "{\"v\":1,\"id\":\"commentary-0-a5b7154a17b606281c6c533d\",\"phase\":\"commentary\"}",
+    "projected": {
+      "itemId": "commentary-0-a5b7154a17b606281c6c533d",
+      "hasTextSignature": false,
+      "extractText": "[Evidence harness · ordinary commentary-* · phase=commentary] Checking workspace status before the shell result lands.",
+      "text": "[Evidence harness · ordinary commentary-* · phase=commentary] Checking workspace status before the shell result lands."
+    }
+  },
+  "provider": {
+    "itemId": "msg_progress_151324_163457f5",
+    "enteredTextSignature": "{\"v\":1,\"id\":\"msg_progress_151324_163457f5\",\"phase\":\"commentary\"}",
+    "projected": {
+      "itemId": "msg_progress_151324_163457f5",
+      "hasTextSignature": false,
+      "extractText": "[Evidence harness · provider msg_* · phase=commentary] Provider-keyed progress retained for this MiniMax tool turn.",
+      "text": "[Evidence harness · provider msg_* · phase=commentary] Provider-keyed progress retained for this MiniMax tool turn."
+    }
+  }
+}

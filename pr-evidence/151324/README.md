@@ -1,13 +1,5 @@
-# PR #151324 live Control UI evidence (MiniMax-M3)
+# Evidence for PR #151324 (Rev 18)
 
-Real local Gateway Control UI session on this branch. No secrets.
+Same-session Control UI proof that ordinary generated `commentary-*` and provider-keyed `msg_*` text **enter as `phase=commentary`**, pass through Gateway `chat.history` / `projectChatDisplayMessages({ includeCommentaryFallbacks: true })`, and remain readable with the **same item identities** through streaming → completion → reload, while MiniMax `minimax-commentary-*` stays phase-tagged (`extractText` null).
 
-## Primary same-session proof (ClawSweeper Rev 17)
-
-See `PROOF.md` and `SAME-SESSION-SHOTS.md` for session `61f91ffd…`.
-
-- MiniMax `minimax-commentary-*` emitted + hidden in UI
-- Unphased ordinary `commentary-*` + provider `msg_*` readable after complete/reload (labeled harness)
-- Invitation card dismissed
-
-Prefer `proof-*.png` + `transcript-*-61f91ffd.redacted.json`.
+See `PROOF.md` and `SAME-SESSION-SHOTS.md`.
