@@ -1,0 +1,34 @@
+{
+  "sessionId": "5ac2f990-2a98-4131-9650-d0893304a5ae",
+  "sessionKey": "agent:main:dashboard:9227aaf3-7dfa-488f-857d-a31ebedcaaac",
+  "identitiesAcrossReload": {
+    "ordinaryItemId": "commentary-0-6f61f0dd3fc566f4b0ebb032",
+    "providerItemId": "msg_progress_151324_cdcca230",
+    "matchOrdinary": true,
+    "matchProvider": true
+  },
+  "uiVisibility": {
+    "collapsedNormalReply": {
+      "minimaxTextAbsent": true,
+      "ordinaryHarnessAbsent": true,
+      "providerHarnessAbsent": true,
+      "finalUtcPresent": true,
+      "note": "Activity group collapsed \u2014 only final answer in normal reply area."
+    },
+    "expandedToolActivityDetails": {
+      "minimaxTextVisible": true,
+      "ordinaryHarnessVisible": true,
+      "providerHarnessVisible": true,
+      "note": "MiniMax narration appears ONLY after expanding tool/activity details."
+    }
+  },
+  "extractTextContract": {
+    "ordinaryReadable": "[Evidence harness \u00b7 ordinary commentary-* \u00b7 phase=commentary] Checking workspace status before the shell result lands.",
+    "providerReadable": "[Evidence harness \u00b7 provider msg_* \u00b7 phase=commentary] Provider-keyed progress retained for this MiniMax tool turn.",
+    "minimaxHidden": [
+      {
+        "id": "minimax-commentary-0-efe5d3311a9b4213b3943c77"
+      }
+    ]
+  }
+}

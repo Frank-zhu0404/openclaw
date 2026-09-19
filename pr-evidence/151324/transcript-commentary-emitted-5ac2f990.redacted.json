@@ -1,0 +1,13 @@
+{
+  "sessionId": "5ac2f990-2a98-4131-9650-d0893304a5ae",
+  "sessionKey": "agent:main:dashboard:9227aaf3-7dfa-488f-857d-a31ebedcaaac",
+  "note": "MiniMax-generated commentary ids confirmed via Gateway chat.history (includeCommentaryFallbacks projection).",
+  "minimaxCommentary": [
+    {
+      "itemId": "minimax-commentary-0-efe5d3311a9b4213b3943c77",
+      "phase": "commentary",
+      "hasTextSignature": true,
+      "text": "I'll start the command now and narrate while it runs."
+    }
+  ]
+}

@@ -1,5 +1,10 @@
-# Evidence for PR #151324 (Rev 18)
+# PR #151324 evidence
 
-Same-session Control UI proof that ordinary generated `commentary-*` and provider-keyed `msg_*` text **enter as `phase=commentary`**, pass through Gateway `chat.history` / `projectChatDisplayMessages({ includeCommentaryFallbacks: true })`, and remain readable with the **same item identities** through streaming → completion → reload, while MiniMax `minimax-commentary-*` stays phase-tagged (`extractText` null).
+Slim in-tree proof: redacted JSON transcripts + `PROOF.md` with screenshot URLs.
 
-See `PROOF.md` and `SAME-SESSION-SHOTS.md`.
+Labeled PNG screenshots are **not** kept in the source tree (ClawSweeper Rev 19).
+They are hosted on the fork release:
+
+https://github.com/Frank-zhu0404/openclaw/releases/tag/pr-151324-rev19-evidence
+
+See `PROOF.md` for the collapsed vs expanded MiniMax visibility claim.

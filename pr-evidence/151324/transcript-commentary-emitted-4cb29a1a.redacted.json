@@ -1,0 +1,13 @@
+{
+  "sessionId": "4cb29a1a-640c-4e70-8b93-286d49d2fa8e",
+  "sessionKey": "agent:main:dashboard:24ed56b1-7210-42eb-8a4b-c17d3b84aa2f",
+  "note": "Live stream (no reload): MiniMax commentary emitted in Gateway history while absent from Control UI body text.",
+  "minimaxCommentary": [
+    {
+      "itemId": "minimax-commentary-0-beb4a8d5ffbe44c8b922d514",
+      "phase": "commentary",
+      "text": "Running a 40-second sleep followed by UTC date.",
+      "visibleInControlUiBodyDuringStream": false
+    }
+  ]
+}
