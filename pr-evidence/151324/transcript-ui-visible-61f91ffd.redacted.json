@@ -1,0 +1,19 @@
+{
+  "sessionId": "61f91ffd-be89-4e2b-a421-fb92b2075ef9",
+  "claim": "Same Control UI session: MiniMax minimax-commentary hidden; unphased ordinary commentary-* and provider msg_* readable after completion and hard reload; invitation card dismissed.",
+  "livePrompt": "Narrate a brief natural progress update, then run exactly: sleep 25; date -u. Keep the progress narration as commentary while the command is running, and report the UTC result when it completes.",
+  "finalUtc": "Sat Sep 19 02:12:34 UTC 2026",
+  "ordinaryItemId": "commentary-0-652c0ddc1e126c6067e78eee",
+  "providerItemId": "msg_progress_151324_e49f5878",
+  "minimaxCommentaryId": "minimax-commentary-0-d1df4424eb9b4f1784c66e51",
+  "pageTextAfterReload": {
+    "minimaxNarrationPresent": false,
+    "ordinaryPresent": true,
+    "providerPresent": true
+  },
+  "md5": {
+    "stream": "2e74fc779aa77ec967c989ff8a8100a0",
+    "complete": "eacd9c30539e63c890f35e70df168221",
+    "reload": "456d78738bf9156d93754bfb57ab2627"
+  }
+}

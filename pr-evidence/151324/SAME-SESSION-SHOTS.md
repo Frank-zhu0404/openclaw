@@ -1,15 +1,17 @@
-# Same-session Control UI screenshots — P1 reshoot @ 68d3b50
+# Same-session Control UI screenshots — Rev 17 reshoot @ 6afa78e
 
-- Head: `68d3b50d83fe71839523e1595bba58f8de738ca2`
-- Session ID: `ab7f1c43-4d6e-443b-abc8-78b99966d82e`
-- Served build-id: `2026.9.4-68d3b50d83fe-2026-09-18T10-26-54.364Z-a616a55da894b94882443a039a2695f1fb8f94af1cba04c69bf81f3d889398d6`
-- JS asset: `/assets/index-BWVKqDuX.js`
-- MiniMax commentary IDs confirmed pre-capture: `minimax-commentary-0-c8d1aa357f45447d873c0fda`, `minimax-commentary-0-8048c9f047714a4b937b4f1d`
+- Head: `6afa78e48908cd028604543904ade0ac72b4e0c9`
+- Session ID: `61f91ffd-be89-4e2b-a421-fb92b2075ef9`
+- Served build-id: `2026.9.4-6afa78e48908-2026-09-19T01-59-17.777Z-a616a55da894b94882443a039a2695f1fb8f94af1cba04c69bf81f3d889398d6`
+- MiniMax commentary ID: `minimax-commentary-0-d1df4424eb9b4f1784c66e51`
+- Ordinary id: `commentary-0-652c0ddc1e126c6067e78eee`
+- Provider id: `msg_progress_151324_e49f5878`
+- Invitation card dismissed: yes
 
 ## Captures
 
-- `proof-stream-filtered.png` — `46b4b9db28ced129d71826f76df306fc` — in-flight; generated commentary absent.
-- `proof-after-complete.png` — `118fd36941f2f8aa8160ce26c7a664e5` — complete; final UTC retained; commentary absent.
-- `proof-after-reload.png` — `350825d619aa35ebc20530b1c271c3f0` — hard reload; final UTC retained; commentary absent.
+- `proof-stream-filtered.png` — `2e74fc779aa77ec967c989ff8a8100a0` — turn framing; generated MiniMax narration absent.
+- `proof-after-complete.png` — `eacd9c30539e63c890f35e70df168221` — ordinary + provider harness text visible.
+- `proof-after-reload.png` — `456d78738bf9156d93754bfb57ab2627` — hard reload; same identities still readable; MiniMax narration absent.
 
-All three PNGs are brand-new with distinct MD5s. Harness injection is not claimed as UI proof (Rev 13). Ordinary/provider-keyed live retention requested via @openclaw-mantis.
+All three PNGs are brand-new with distinct MD5s.

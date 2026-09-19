@@ -2,16 +2,12 @@
 
 Real local Gateway Control UI session on this branch. No secrets.
 
-## Primary same-session proof (ClawSweeper)
+## Primary same-session proof (ClawSweeper Rev 17)
 
-See `PROOF.md`. Pair:
+See `PROOF.md` and `SAME-SESSION-SHOTS.md` for session `61f91ffd…`.
 
-- `transcript-commentary-emitted.redacted.json` — gateway stored `phase=commentary`
-- `proof-*.png` + `SAME-SESSION-SHOTS.md` — UI hides that commentary; keeps tool/final through reload
-- `transcript-ui-visible.redacted.json` / `session-fb8ca107-transcript.redacted.json` — redacted stream
+- MiniMax `minimax-commentary-*` emitted + hidden in UI
+- Unphased ordinary `commentary-*` + provider `msg_*` readable after complete/reload (labeled harness)
+- Invitation card dismissed
 
-## Earlier captures
-
-`live-*.png` are older Control UI shots (weaker because prompts suppressed narration). Prefer `proof-*` + transcript pair above.
-
-Redacted API JSON probes remain for provider shape.
+Prefer `proof-*.png` + `transcript-*-61f91ffd.redacted.json`.
